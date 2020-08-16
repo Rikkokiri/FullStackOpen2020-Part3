@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-let numbers = [
+let contacts = [
     {
         name: "Arto Hellas",
         number: "040-123456",
@@ -30,8 +30,15 @@ app.get('/', (req, res) => {
     res.send('Hello world')
 })
 
+app.get('/info', (req, res) => {
+    res.send(
+        `<p>Phonebook has info for ${contacts.length} people</p>
+        <p>${new Date()}</p>`
+    )
+})
+
 app.get('/api/persons', (req, res) => {
-    res.json(numbers)
+    res.json(contacts)
 })
 
 const PORT = 3001
