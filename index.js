@@ -1,8 +1,14 @@
 const { response } = require('express')
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 app.use(express.json())
+
+// Configure middleware Morgan for logging
+
+app.use(morgan('tiny'))
+
 
 let contacts = [
     {
