@@ -65,6 +65,28 @@ const generateId = () => {
 app.post('/api/persons', (req, res) => {
     const body = req.body
 
+    // The request is not allowed to succeed, if:
+    // - The name or number is missing
+    // - The name already exists in the phonebook
+    if (!body.number) {
+        return res.status(400).json({
+            error: 'Number missing'
+        })
+    }
+
+    if (!body.name) {
+        return res.status(400).json({
+            error: 'Name missing'
+        })
+    }
+
+    // 409: Conflict (https://tools.ietf.org/html/rfc7231#section-6.5.8)
+    if( !isNameUnique(body.name) ) {
+        return res.status(409).json({
+            error: 'Name must be unique'
+        })
+    }
+
     const contact = {
         name: body.name,
         number: body.number,
@@ -74,6 +96,11 @@ app.post('/api/persons', (req, res) => {
     contacts = contacts.concat(contact)
     res.json(contact)
 })
+
+const isNameUnique = (name) => {
+    let matches = contacts.filter(contact => contact.name.toLowerCase() == name.toLowerCase() )
+    return matches.length === 0
+}
 
 const PORT = 3001
 app.listen(PORT)
